@@ -1,0 +1,5 @@
+- name: Ejecucion ServiciosOff
+  hosts: all
+  become: true
+  roles:
+    - serviciosOff

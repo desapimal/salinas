@@ -1,0 +1,5 @@
+- name: Ejecucion ConfigSelinux
+  hosts: all
+  become: true
+  roles:
+    - configSelinux

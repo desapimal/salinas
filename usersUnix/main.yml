@@ -1,0 +1,5 @@
+- name: Ejecucion UsersUnix
+  hosts: all
+  become: true
+  roles:
+    - usersUnix

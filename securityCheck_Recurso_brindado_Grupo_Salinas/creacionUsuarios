@@ -1,0 +1,160 @@
+#! /bin/bash
+# Creacion de Usuarios y grupos para Unix, Oracle y monitoreo
+# V. 0.0 10 Apr 2013 by cookkie
+
+user=$1
+
+#===========Usuarios Unix================================================================
+NAMES[1]="653 315458 Diego Armando Alonzo Rojas"
+NAMES[25]="665 351377 Juan Rodrigo Jimenez Lara"
+
+
+#===========Usuarios Oracle==============================================================
+
+ORACLE[1]="502 oracle Oracle DataBase Adminstrator"
+ORACLE[2]="503 grid   Grid DataBase Administrator"
+
+#===========Grupos Oracle================================================================
+
+ORACLEGP[1]="502 oinstall"
+ORACLEGP[2]="503 dba"
+ORACLEGP[3]="504 asmoper"
+ORACLEGP[4]="505 asmadmin"
+ORACLEGP[5]="506 asmdba"
+ORACLEGP[6]="507 oper"
+
+
+#===========Usuarios y Grupos Monitoreo===================================================
+monitoreo[1]="508 usrmon Monitoreo Aplicativo"
+monitoreo[2]="509 patrol Agente Patrol"
+monitoreo[3]="510 scom Agente SCOM"
+
+monitorgp[1]="508 usrmon"
+monitorgp[2]="509 patrol" 
+monitorgp[3]="510 scom"
+
+#================Funcion Cambiar Password ================================================
+function changeunix(){
+	echo "	>> "`tput bold`"\"111111111\" <<" `tput sgr0`
+	for i in "${NAMES[@]}"; do
+	   user=$(echo $i | tr " " ":" | awk -F: '{print $2}')
+           echo -n "  Cambiando  el password de: " `tput bold` b$user `tput sgr0`
+           echo "1111111111111111111" | passwd --stdin b$user > /dev/null
+             if [ $? = 0 ];then
+                echo `tput bold` " exitosamente!! (^_^) :." `tput sgr0`
+             fi
+	   chage -d 0 b$user
+	done
+}
+#================Funcion Crear Usuarios Unix==============================================
+function createunix(){
+
+	GRP=`grep sysadmin /etc/group | awk -F: '{ print $1 }'`
+	if [ -z ${GRP} ]; then
+           echo "__Creando grupo " `tput bold` "sysadmin" `tput sgr0`
+           groupadd sysadmin -g 600 
+           if [ $? = 0 ];then
+                echo "Creando Usuarios"
+                for index in `seq  1 ${#NAMES[*]}`;do
+                  echo "	Creando: " `tput bold` ${NAMES[index]:11:32} `tput sgr0`
+                  useradd -m \
+		  -d /home/b${NAMES[index]:4:6} \
+		  -c "${NAMES[index]:11:32}" \
+		  -s /bin/bash \
+		  -u ${NAMES[index]:0:3} \
+		  -g sysadmin \
+		  b${NAMES[index]:4:6} > /dev/null
+                done
+           fi
+	else
+           echo "Grupo" `tput bold` "sysadmin" `tput sgr0` " si existe!!"
+           echo "----Creando Usuarios Sistemas Unix----"
+	   echo " "
+           for index in `seq 1 ${#NAMES[*]}`;do
+             echo "__Creando: " `tput bold` ${NAMES[index]:6:32} `tput sgr0`
+             echo " "
+             useradd -m \
+	     -d /home/b${NAMES[index]:4:6} \
+	     -c "${NAMES[index]:11:32}" \
+	     -s /bin/bash \
+	     -u ${NAMES[index]:0:3} \
+	     -g sysadmin \
+	     b${NAMES[index]:4:6} > /dev/null
+           done
+       fi
+echo "	Creacion de Usuarios Lista!!"
+changeunix;
+}
+#================Funcion Crear Usuarios Oracle ===========================================
+function createoracle(){
+        for oragp in `seq 1 ${#ORACLEGP[*]}`
+        do
+                echo "Creando grupos: " `tput bold` ${ORACLEGP[oragp]:4:10}  `tput sgr0`
+                groupadd ${ORACLEGP[oragp]:4:10}  -g ${ORACLEGP[oragp]:0:3}
+        done
+
+        echo "Creando Usuarios"
+        for orau in `seq  1 ${#ORACLE[*]}`
+        do
+                echo "Creando: " `tput bold` ${ORACLE[orau]:11:28} `tput sgr0`
+                useradd -m \
+                -d /home/${ORACLE[orau]:4:6} \
+                -c "${ORACLE[orau]:11:27}" \
+                -s /bin/bash \
+                -u ${ORACLE[orau]:0:3} \
+                -g ${ORACLEGP[1]:0:3} \
+                -G ${ORACLEGP[2]:0:3},${ORACLEGP[3]:0:3},${ORACLEGP[4]:0:3},${ORACLEGP[5]:0:3},${ORACLEGP[6]:0:3} \
+                ${ORACLE[orau]:4:6} > /dev/null
+        done
+
+        echo " "
+        echo "*\Establenciendo password a /*" `tput bold` "\"22222222222222\"" `tput sgr0`
+        echo " "
+        echo "222222222222222222222" | passwd --stdin oracle > /dev/null
+        if [ $? = 0 ]
+        then
+                echo `tput bold` "ORACLE -------------------------------------OK!!" `tput sgr0`
+        fi
+        echo "2222222222222222222" | passwd --stdin grid > /dev/null
+        if [ $? = 0 ]
+        then
+                echo `tput bold` " GRID  -------------------------------------OK!!" `tput sgr0`
+        fi
+echo " "
+echo "Creacion de Usuarios Lista!!"
+echo " "
+}
+
+#================Funcion Crear Usuarios y grupos de monitoreo ===========================
+
+function createmonitoreo(){
+	for i in "${monitorgp[@]}"
+	  do	
+		echo "Creando grupo: $(echo $i | awk '{print $2" con id: "$1 }')" 
+		groupadd $(echo $i | awk '{print $2}')	-g $(echo $i | awk '{print $1}') 	
+	done
+	for i in "${monitoreo[@]}" 
+	  do
+		user=$(echo $i | awk '{print $2}' )
+		id=$(echo $i | awk '{print $1}' )
+		coment=$(echo $i | awk '{print $3 $4}')
+		echo "__Creando usuario de monitoreo: $user"
+		useradd -m -c \"$coment\" -g $id -d /home/$user -s /bin/bash -u $id  $user
+		echo "33333333333333" | passwd --stdin $user > /dev/null
+	done  
+}
+
+
+case $user in
+	unix) 
+		createunix
+	;;
+	oracle) 
+		createoracle
+	;;
+	monitoreo)
+		createmonitoreo
+	;;
+	
+	*) echo "Error!";;
+esac

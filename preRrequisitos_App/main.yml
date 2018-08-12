@@ -1,0 +1,5 @@
+- name: Ejecucion PreRrequisitos App
+  hosts: all
+  become: true
+  roles:
+    - prerrequistos

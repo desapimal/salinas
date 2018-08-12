@@ -1,0 +1,15 @@
+lista_servicios:
+  - cups
+  - sendmail
+  - bluetooth
+  - hplip #HP Printer and Scaner
+  - postfix
+  - autofs
+  - atd
+  - ip6tables
+  - rhnsd #Red Hat Network Service
+  - nfs
+  - nfslock
+  - rpcgssd
+  - rpcidmapd
+  - rpcsvcgssd

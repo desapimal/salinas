@@ -1,0 +1,108 @@
+config_profile: |
+  if [ \$USER = "oracle" ]; then
+  if [ \$SHELL = "/bin/ksh" ]; then
+  ulimit -p 16384
+  ulimit -n 65536
+  else
+  ulimit -u 16384 -n 65536
+  fi
+  umask 022
+  fi
+  if [ \$USER = "grid" ]; then
+  if [ \$SHELL = "/bin/ksh" ]; then
+  ulimit -p 16384
+  ulimit -n 65536
+  else
+  ulimit -u 16384 -n 65536
+  fi
+  umask 022
+  fi
+
+config_cshlogin: |
+  if ( \$USER == "oracle" ) then
+  limit maxproc 16384
+  limit descriptors 65536
+  umask 022
+  endif
+  if ( \$USER == "grid" ) then
+  limit maxproc 16384
+  limit descriptors 65536
+  umask 022
+  endif
+
+lista_paquetes:
+  - elfutils-*
+  - glibc-*
+  - gcc-4*
+  - gcc-c++*
+  - libstdc++*
+  - glibc-headers*
+  - libgomp*
+  - compat-libstdc++*
+  - libaio-*
+  - sysstat*
+  #- unixODBC
+  - unixODBC*
+  - rsh-*
+  - ksh
+  - xorg-x11-apps
+  - compat-libcap*
+  - telnet
+  - tuned
+  #Paquete necesario para Oraclesm
+  - kmod-oracleasm
+  #Paquete necesario para Iniciar Configuración de Oraclesm
+  - expect
+
+lista_grupos_paquetes:
+  #- X Window System
+  - gnome-desktop-environment
+
+lista_directorios_permisos_oracle:
+  - /oracle11
+  - /oracle12
+  - /oradump
+  - /oradata
+
+lista_directorios_permisos_root:
+  - /grid
+
+lista_config_sysctl:
+  - kernel.shmmni = 4096
+  - kernel.sem = 250 32000 100 128
+  - fs.file-max = 6815744
+  - fs.aio-max-nr=1048576
+  - net.ipv4.ip_local_port_range = 9000 65500
+  - net.core.rmem_default=4194304
+  - net.core.wmem_default=262144
+  - net.core.rmem_max=4194304
+  - net.core.wmem_max=1048576
+  - net.netfilter.nf_conntrack_max = 1048576
+  - kernel.panic_on_oops = 1
+  - net.ipv6.conf.all.disable_ipv6 = 1
+
+lista_config_limits:
+  - oracle soft nproc 2047
+  - oracle hard nproc 16384
+  - oracle soft nofile 1024
+  - oracle hard nofile 65536
+  - grid soft nproc 2047
+  - grid hard nproc 16384
+  - grid soft nofile 1024
+  - grid hard nofile 65536
+
+lista_config_pamd_login:
+  - session required pam_limits.so
+
+lista_servicios_rsh:
+  - rsh.socket
+  - rlogin.socket
+  - rexec.socket
+
+#Variable a eliminar, usada en pruebas
+lista_crear_directorios:
+  - /grid
+  - /oracle11
+  - /oracle12
+  - /oradump
+  - /oradata

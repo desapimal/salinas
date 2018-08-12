@@ -1,0 +1,28 @@
+- name: Crear Grupo Sysadmin
+  group:
+    name: sysadmin
+    gid: 600
+    state: present
+- name: Copiar Archivo CSV de Usuarios Unix
+  copy:
+    src: unixUsers.csv
+    dest: /var/tmp/
+    owner: root
+    group: root
+    mode: 777
+    force: yes
+- name: Leer Archivo CSV de Usuarios Unix
+  command: /usr/bin/awk -F',' '!/^#/ && !/^$/ { print $1 }' /var/tmp/unixUsers.csv
+  register: unixUsers_out
+- name: Crear Usuarios Sistemas Unix
+  user:
+    uid: "{{ lookup('csvfile', item + ' file=unixUsers.csv col=0 delimiter=,') }}"
+    name: "{{ lookup('csvfile', item + ' file=unixUsers.csv col=1 delimiter=,') }}"
+    comment: "{{ lookup('csvfile', item + ' file=unixUsers.csv col=2 delimiter=,') }}"
+    home: "/home/{{ lookup('csvfile', item + ' file=unixUsers.csv col=1 delimiter=,') }}"
+    update_password: always
+    password: "{{ '111' | password_hash('sha512') }}"
+    #password: "{{ {{password}} | password_hash('sha512') }}"
+    groups: sysadmin
+    shell: /bin/bash
+  loop: "{{ unixUsers_out.stdout_lines }}"

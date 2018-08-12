@@ -1,0 +1,15 @@
+lista_servicios:
+  - cups
+  - sendmail
+  - bluetooth
+  - hplip
+  - postfix
+  - autofs
+  - atd
+  - ip6tables
+  - rhnsd
+  - nfs
+  - nfslock
+  - rpcgssd
+  - rpcidmapd
+  - rpcsvcgssd

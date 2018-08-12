@@ -1,0 +1,5 @@
+- name: Ejecucion PreRrequisitos Bd
+  hosts: all
+  become: true
+  roles:
+    - prerrequistos

@@ -1,0 +1,39 @@
+- name: Copiar Archivo CSV de Grupos de Monitoreo
+  copy:
+    src: monitorGroups.csv
+    dest: /var/tmp/
+    owner: root
+    group: root
+    mode: 777
+    force: yes
+- name: Leer Archivo CSV de Grupos de Monitoreo
+  command: /usr/bin/awk -F',' '!/^#/ && !/^$/ { print $1 }' /var/tmp/monitorGroups.csv
+  register: monitorGroups_out
+- name: Crear Grupos de Monitoreo
+  group:
+    gid: "{{ lookup('csvfile', item + ' file=monitorGroups.csv col=0 delimiter=,') }}"
+    name: "{{ lookup('csvfile', item + ' file=monitorGroups.csv col=1 delimiter=,') }}"
+    state: present
+  loop: "{{ monitorGroups_out.stdout_lines }}"
+- name: Copiar Archivo CSV de Usuarios de Monitoreo
+  copy:
+    src: monitorUsers.csv
+    dest: /var/tmp/
+    owner: root
+    group: root
+    mode: 777
+    force: yes
+- name: Leer Archivo CSV de Usuarios de Monitoreo
+  command: /usr/bin/awk -F',' '!/^#/ && !/^$/ { print $1 }' /var/tmp/monitorUsers.csv
+  register: monitorUsers_out
+- name: Crear Usuarios de Monitoreo
+  user:
+    uid: "{{ lookup('csvfile', item + ' file=monitorUsers.csv col=0 delimiter=,') }}"
+    name: "{{ lookup('csvfile', item + ' file=monitorUsers.csv col=1 delimiter=,') }}"
+    comment: "{{ lookup('csvfile', item + ' file=monitorUsers.csv col=2 delimiter=,') }}"
+    home: "/home/{{ lookup('csvfile', item + ' file=monitorUsers.csv col=1 delimiter=,') }}"
+    update_password: always
+    password: "{{ '111' | password_hash('sha512') }}"
+    groups: "{{ lookup('csvfile', item + ' file=monitorUsers.csv col=0 delimiter=,') }}"
+    shell: /bin/bash
+  loop: "{{ monitorUsers_out.stdout_lines }}"

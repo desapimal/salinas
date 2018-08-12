@@ -1,0 +1,5 @@
+- name: Ejecucion UsersOracle
+  hosts: all
+  become: true
+  roles:
+    - usersOracle

@@ -1,0 +1,5 @@
+- name: Iniciar-Iptables
+  service:
+    name: iptables
+    enabled: true
+    state: started

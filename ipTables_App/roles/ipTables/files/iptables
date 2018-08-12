@@ -1,0 +1,78 @@
+# Firewall configuration written by Sistemas Unix - Banco Azteca - APP
+*filter
+:INPUT ACCEPT [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:RH-Firewall-1-INPUT - [0:0]
+-A INPUT -j RH-Firewall-1-INPUT
+-A FORWARD -j RH-Firewall-1-INPUT
+-A RH-Firewall-1-INPUT -i lo -j ACCEPT
+-A RH-Firewall-1-INPUT -p icmp --icmp-type any -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+-A INPUT -p tcp ! --syn -m state --state NEW -j DROP
+-A INPUT -f -j DROP
+-A INPUT -p tcp --tcp-flags ALL ALL -j DROP
+-A INPUT -p tcp --tcp-flags ALL NONE -j DROP
+-A INPUT -p icmp --icmp-type 13 -j DROP
+-A OUTPUT -p icmp --icmp-type 14 -j DROP
+
+# Viejas Ip's
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.52 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.53 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.54 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.55 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.56 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.57 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.58 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.59 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.60 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.61 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.62 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.36 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.38 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.39 -m multiport --ports 22 -j ACCEPT
+
+# Ips de Monitoreo user: scom
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.40 -m multiport --ports 1521 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.48 -m multiport --ports 1521 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.45 -m multiport --ports 1521 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.42 -m multiport --ports 1521 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.43 -m multiport --ports 1521 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.63.5.14   -m multiport --ports 22,1270 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.63.34.49  -m multiport --ports 22,1270 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.63.50.77  -m multiport --ports 22,1270 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.53.34.49  -m multiport --ports 22,1270 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.53.34.52  -m multiport --ports 22,1270 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.53.34.54  -m multiport --ports 22,1270 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.53.34.58  -m multiport --ports 22,1270 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.63.50.161 -m multiport --ports 22,1270 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.63.5.140  -m multiport --ports 22,1270 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.80.50.242 -m multiport --ports 22,1270 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.80.50.243 -m multiport --ports 22,1270 -j ACCEPT
+
+# IPs de Patrol
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.63.33.250 -m multiport --ports 1521 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.63.63.55 -m multiport --ports 1521 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.63.50.74 -m multiport --ports 3181,22,2059,50001 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.252 -m multiport --ports 3181,22,2059,50001  -j ACCEPT
+
+# Ips de Monitoreo Aplicativo user: usrmon
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.53.28.170  -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.53.28.171  -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.53.28.172  -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.63.50.41   -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.63.33.97   -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.63.20.147  -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.63.100.10  -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.63.100.108 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.63.50.79   -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.63.150.238 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.164 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.166.169 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.167.59  -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.167.76  -m multiport --ports 22 -j ACCEPT
+
+# Bloqueamos TODO lo no explicitamente permitido
+-A RH-Firewall-1-INPUT -j REJECT --reject-with icmp-host-prohibited
+COMMIT

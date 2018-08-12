@@ -1,0 +1,13 @@
+- name: Ejecucion securitycheck app
+  hosts: all
+  become: true
+  roles:
+    #- sshRoot
+    #- serviciosOff
+    #- loginEncrypt
+    #- configNtp
+    #- ipTables
+    #- configSelinux
+    #- prerrequistos
+    #- usersUnix
+    - usersMonitor

@@ -1,0 +1,5 @@
+- name: Ejecucion ConfigNtp
+  hosts: all
+  become: true
+  roles:
+    - configNtp

@@ -1,0 +1,25 @@
+- name: Actualizar Sistema
+  yum:
+    name: '*'
+    state: latest
+- pause:
+    seconds: 2
+- name: Instalar Grupos de Paquetes
+  yum:
+    name: "@^{{ item }}"
+    state: latest
+  loop: "{{ lista_grupos }}"
+- pause:
+    seconds: 2
+- name: Instalar Paquetes
+  yum:
+    name: "{{ item }}"
+    state: latest
+  loop: "{{ lista_paquetes }}"
+- pause:
+    seconds: 2
+- name: Agregar Limits
+  lineinfile:
+    path: '/etc/security/limits.conf'
+    line: "{{ item }}"
+  loop: "{{ lista_limits }}"

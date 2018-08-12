@@ -1,0 +1,5 @@
+- name: Ejecucion UsersMonitor
+  hosts: all
+  become: true
+  roles:
+    - usersMonitor

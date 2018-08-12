@@ -1,0 +1,11 @@
+- name: Eliminar configuracion pordefecto de hora y fecha
+  lineinfile:
+    path: '/etc/ntp.conf'
+    regexp: '^server.*$'
+    state: absent
+- name: Activar configuracion de hora y fecha
+  lineinfile:
+    path: '/etc/ntp.conf'
+    line: 'server 10.53.21.136 iburst'
+    insertafter: '^.*http://www.pool.ntp.org/join.html.*$'
+  notify: Iniciar-Ntp

@@ -1,0 +1,25 @@
+
+
+
+# IPs Cyberark
+
+
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.158.43 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.158.45 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.158.74 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.64.16.173 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.64.16.175 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.64.248.31 -m multiport --ports 22 -j ACCEPT
+
+
+# IPs Cyberark
+
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.158.43 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.158.45 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.50.158.74 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.64.16.173 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.64.16.175 -m multiport --ports 22 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp -s 10.64.248.31 -m multiport --ports 22 -j ACCEPT
+
+# Bloqueamos TODO lo no explicitamente permitido
+

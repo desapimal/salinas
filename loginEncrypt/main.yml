@@ -1,0 +1,5 @@
+- name: Ejecucion LoginEncrypt
+  hosts: all
+  become: true
+  roles:
+    - loginEncrypt

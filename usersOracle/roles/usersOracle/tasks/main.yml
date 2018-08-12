@@ -1,0 +1,45 @@
+- name: Copiar Archivo CSV de Grupos Oracle
+  copy:
+    src: oracleGroups.csv
+    dest: /var/tmp/
+    owner: root
+    group: root
+    mode: 0777
+    force: yes
+- pause:
+    seconds: 2
+- name: Leer Archivo CSV de Grupos Oracle
+  command: /usr/bin/awk -F',' '!/^#/ && !/^$/ { print $1 }' /var/tmp/oracleGroups.csv
+  register: oracleGroups_out
+- name: Crear Grupos Oracle
+  group:
+    gid: "{{ lookup('csvfile', item + ' file=oracleGroups.csv col=0 delimiter=,') }}"
+    name: "{{ lookup('csvfile', item + ' file=oracleGroups.csv col=1 delimiter=,') }}"
+    state: present
+  loop: "{{ oracleGroups_out.stdout_lines }}"
+- name: Copiar Archivo CSV de Usuarios Oracle
+  copy:
+    src: oracleUsers.csv
+    dest: /var/tmp/
+    owner: root
+    group: root
+    mode: 0777
+    force: yes
+- pause:
+    seconds: 2
+- name: Leer Archivo CSV de Usuarios Oracle
+  command: /usr/bin/awk -F',' '!/^#/ && !/^$/ { print $1 }' /var/tmp/oracleUsers.csv
+  register: oracleUsers_out
+- name: Crear Usuarios Oracle
+  user:
+    uid: "{{ lookup('csvfile', item + ' file=oracleUsers.csv col=0 delimiter=,') }}"
+    name: "{{ lookup('csvfile', item + ' file=oracleUsers.csv col=1 delimiter=,') }}"
+    comment: "{{ lookup('csvfile', item + ' file=oracleUsers.csv col=2 delimiter=,') }}"
+    home: "/home/{{ lookup('csvfile', item + ' file=oracleUsers.csv col=1 delimiter=,') }}"
+    update_password: always
+    password: "{{ '222' | password_hash('sha512') }}"
+    group: oinstall
+    groups: dba,asmoper,asmadmin,asmdba,oper
+    append: yes
+    shell: /bin/bash
+  loop: "{{ oracleUsers_out.stdout_lines }}"

@@ -1,0 +1,6 @@
+- name: Desactivando acceso a ROOT por ssh
+  replace:
+    path: '/etc/sysconfig/selinux'
+    regexp: '#PermitRootLogin yes'
+    replace: 'PermitRootLogin no'
+  notify: Reiniciar-Sshd

@@ -1,0 +1,30 @@
+lista_paquetes:
+  - xorg-x11-apps
+  - compat-libcap*
+  - telnet
+  - firefox
+  - glibc.i686
+  - elfutils-libelf.i686
+  - elfutils-libs.i686
+  - elfutils-libelf-devel.i686
+  - elfutils-libelf
+  - nss-softokn-freebl.i686
+  - pam-devel.i686
+  - compat-libstdc++-33.i686
+  # Paquete No encontrado
+  #- compat-libstdc++-33-3.2.3-69.el6.x86_64
+  - libstdc++.i686
+
+lista_grupos:
+  # Paquete No encontrado
+  #- X Window System
+
+lista_limits:
+  - jboss   soft    nofile  65536
+  - jboss   hard    nofile  65536
+  - jboss   soft    nproc   65536
+  - jboss   hard    nproc   65536
+  - root   soft    nofile  65536
+  - root   hard    nofile  65536
+  - root   soft    nproc   65536
+  - root   hard    nproc   65536

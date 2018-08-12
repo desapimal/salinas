@@ -1,0 +1,7 @@
+- name: Desactivar servicios NO necesarios
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+  loop: "{{ lista_servicios }}"

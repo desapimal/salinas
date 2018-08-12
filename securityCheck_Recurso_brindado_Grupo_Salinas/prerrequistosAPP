@@ -1,0 +1,25 @@
+#! /bin/bash
+
+yum clean all	
+	yum -y update
+	yum groupinstall -y "X Window System"
+	yum install -y xorg-x11-apps
+	yum install -y compat-libcap*
+	yum install -y telnet
+	yum install -y firefox
+	yum install -y glibc.i686 elfutils-libelf.i686 elfutils-libs.i686 elfutils-libelf-devel.i686 elfutils-libelf nss-softokn-freebl.i686 pam-devel.i686 compat-libstdc++-33.i686 compat-libstdc++-33-3.2.3-69.el6.x86_64 libstdc++.i686
+
+cat >>/etc/security/limits.conf<<EOF
+jboss   soft    nofile  65536
+jboss   hard    nofile  65536
+jboss   soft    nproc   65536
+jboss   hard    nproc   65536
+EOF
+
+cat >>/etc/security/limits.conf<<EOF
+root   soft    nofile  65536
+root   hard    nofile  65536
+root   soft    nproc   65536
+root   hard    nproc   65536
+EOF
+

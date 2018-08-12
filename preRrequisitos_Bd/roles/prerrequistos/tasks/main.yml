@@ -1,0 +1,124 @@
+- name: Actualizar Sistema
+  yum:
+    name: '*'
+    state: latest
+- pause:
+    seconds: 2
+- name: Instalar Grupos de Paquetes
+  yum:
+    name: "@^{{ item }}"
+    state: latest
+  loop: "{{ lista_grupos_paquetes }}"
+- name: Instalar Paquetes
+  yum:
+    name: "{{ item }}"
+    state: latest
+  loop: "{{ lista_paquetes }}"
+- name: Copiar RPM Oraclesm Lib
+  copy:
+    src: oracleasmlib-2.0.4-1.el6.x86_64.rpm
+    dest: /var/tmp/
+    owner: root
+    group: root
+    mode: 0777
+    force: yes
+- pause:
+    seconds: 2
+- name: Copiar RPM Oraclesm Support
+  copy:
+    src: oracleasm-support-2.1.8-1.el6.x86_64.rpm
+    dest: /var/tmp/
+    owner: root
+    group: root
+    mode: 0777
+    force: yes
+- pause:
+    seconds: 2
+- name: Instalar Oraclesm
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - /var/tmp/oracleasmlib-2.0.4-1.el6.x86_64.rpm
+    - /var/tmp/oracleasm-support-2.1.8-1.el6.x86_64.rpm
+- name: Copiar Expect Oraclesm Config
+  copy:
+    src: oraclesm_config.exp
+    dest: /var/tmp/
+    owner: root
+    group: root
+    mode: 0777
+    force: yes
+- pause:
+    seconds: 2
+- name: Ejecutar Oraclesm Config
+  command: expect /var/tmp/oraclesm_config.exp
+- name: Copiar Shell Oraclesm Scan
+  copy:
+    src: oraclesm_scan.sh
+    dest: /var/tmp/
+    owner: root
+    group: root
+    mode: 0777
+    force: yes
+- pause:
+    seconds: 2
+- name: Ejecutar Shell Oraclesm Scan
+  command: /var/tmp/oraclesm_scan.sh
+- name: Agregar Configuracion a Sysctl.conf
+  lineinfile:
+    path: /etc/sysctl.conf
+    line: "{{ item }}"
+  loop: "{{ lista_config_sysctl }}"
+- name: Ejecutar Sysctl -p
+  command: /sbin/sysctl -p
+- pause:
+    seconds: 3
+- name: Agregar Configuracion a Limits.conf
+  lineinfile:
+    path: /etc/security/limits.conf
+    line: "{{ item }}"
+  loop: "{{ lista_config_limits }}"
+- name: Agregar Configuracion a Pam.d/Login
+  lineinfile:
+    path: /etc/pam.d/login
+    line: "{{ item }}"
+  loop: "{{ lista_config_pamd_login }}"
+- name: Agregar Configuracion a Profile
+  blockinfile:
+    path: /etc/profile
+    block: "{{ config_profile }}"
+- name: Agregar Configuracion a Csh.login
+  blockinfile:
+    path: /etc/csh.login
+    block: "{{ config_cshlogin }}"
+  ###########################
+  #Tarea debe ser eliminada, se uso solo para pruebas
+- name: Crear Directorios de Chown / Chmod
+  file:
+    path: "{{ item }}"
+    state: directory
+  loop: "{{ lista_crear_directorios}}"
+  ###########################
+- name: Cambiar Directorios de Propietario Oracle
+  file:
+    path: "{{ item }}"
+    owner: oracle
+    group: oinstall
+    mode: 0775
+    recurse : yes
+  loop: "{{ lista_directorios_permisos_oracle }}"
+- name: Cambiar Directorios de Propietario Root
+  file:
+    path: "{{ item }}"
+    owner: root
+    group: oinstall
+    mode: 0775
+    recurse : yes
+  loop: "{{ lista_directorios_permisos_root }}"
+- name: Iniciar Configuracion Rlogin
+  service:
+    name: "{{ item }}"
+    enabled: yes
+    state: restarted
+  loop: "{{ lista_servicios_rsh }}"

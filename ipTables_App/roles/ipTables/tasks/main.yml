@@ -1,0 +1,23 @@
+- name: Deshabilitar Firewalld
+  service:
+    name: firewalld
+    enabled: false
+    state: stopped
+- name: Aplicar Mask a Firewalld
+  systemd:
+    name: firewalld
+    masked: yes
+    state: stopped
+- name: Instalar Iptables
+  yum:
+    name: iptables-services
+    state: latest
+- name: Copiar Archivo Configuracion
+  copy:
+    src: iptables
+    dest: /etc/sysconfig/
+    owner: root
+    group: root
+    mode: 0600
+    force: yes
+  notify: Iniciar-Iptables

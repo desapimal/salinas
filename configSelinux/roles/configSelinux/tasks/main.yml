@@ -1,0 +1,4 @@
+- name: Deshabilitar SeLinux
+  selinux:
+    conf: '/etc/selinux/config'
+    state: disabled

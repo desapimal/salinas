@@ -1,0 +1,5 @@
+- name: Ejecucion SshRoot
+  hosts: all
+  become: true
+  roles:
+    - sshRoot
